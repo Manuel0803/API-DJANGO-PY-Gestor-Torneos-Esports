@@ -1,0 +1,39 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyc
+*.pyo
+*.pyd
+*.so
+
+# Entorno virtual
+.venv/
+venv/
+env/
+
+# Variables de entorno
+.env
+
+# Base de datos
+db.sqlite3
+
+# Archivos de evidencia (preservar la carpeta)
+media/evidencias/*
+!media/evidencias/.gitkeep
+
+# docs / guía interna (no subir al repo)
+gemini-django.md
+
+# Distribución / packaging
+dist/
+build/
+*.egg-info/
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Docker
+*.log
