@@ -17,11 +17,11 @@ env/
 # Base de datos
 db.sqlite3
 
-# Archivos de evidencia (preservar la carpeta)
+# Archivos de evidencia 
 media/evidencias/*
 !media/evidencias/.gitkeep
 
-# docs / guía interna (no subir al repo)
+# docs / guía interna 
 gemini-django.md
 
 # Distribución / packaging
@@ -37,3 +37,8 @@ build/
 
 # Docker
 *.log
+
+GEMINI.md
+gemini-django.md
+notas/
+
