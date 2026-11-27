@@ -3,3 +3,7 @@ djangorestframework
 django-cors-headers
 Pillow
 python-dotenv
+PyJWT
+requests
+channels
+daphne
