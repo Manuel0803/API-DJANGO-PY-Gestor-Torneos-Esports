@@ -12,11 +12,18 @@ from core.express_client import notificar_evento_express
 from core.simulador import configurar_estado, evaluar_simulacion, reiniciar_estado
 
 
-def generar_jwt(rol='ADMIN', expirado=False):
+def generar_jwt(
+    rol='ORGANIZADOR',
+    expirado=False,
+    issuer=None,
+    audience=None,
+):
     delta = timedelta(minutes=-5) if expirado else timedelta(minutes=30)
     payload = {
         'sub': 'usuario-test-1',
         'rol': rol,
+        'iss': issuer or settings.JWT_ISSUER,
+        'aud': audience or settings.JWT_AUDIENCE,
         'exp': datetime.now(timezone.utc) + delta,
     }
     return jwt.encode(payload, settings.JWT_SECRET, algorithm=settings.JWT_ALGORITHM)
@@ -56,7 +63,7 @@ class CoreEndpointsTest(SimpleTestCase):
         self.assertEqual(respuesta.status_code, 401)
 
     def test_post_estado_simulador_con_jwt_expirado_retorna_401(self):
-        token = generar_jwt(rol='ADMIN', expirado=True)
+        token = generar_jwt(rol='ORGANIZADOR', expirado=True)
         respuesta = self.client.post(
             '/api/estado-simulador',
             data={'modo': 'error_500'},
@@ -65,7 +72,17 @@ class CoreEndpointsTest(SimpleTestCase):
         )
         self.assertEqual(respuesta.status_code, 401)
 
-    def test_post_estado_simulador_con_rol_no_admin_retorna_403(self):
+    def test_post_estado_simulador_con_audience_invalida_retorna_401(self):
+        token = generar_jwt(rol='ORGANIZADOR', audience='otra-audiencia')
+        respuesta = self.client.post(
+            '/api/estado-simulador',
+            data={'modo': 'error_500'},
+            content_type='application/json',
+            HTTP_AUTHORIZATION=f'Bearer {token}',
+        )
+        self.assertEqual(respuesta.status_code, 401)
+
+    def test_post_estado_simulador_con_rol_no_organizador_retorna_403(self):
         token = generar_jwt(rol='CAPITAN')
         respuesta = self.client.post(
             '/api/estado-simulador',
@@ -75,8 +92,8 @@ class CoreEndpointsTest(SimpleTestCase):
         )
         self.assertEqual(respuesta.status_code, 403)
 
-    def test_post_estado_simulador_con_jwt_admin_actualiza_estado(self):
-        token = generar_jwt(rol='ADMIN')
+    def test_post_estado_simulador_con_jwt_organizador_actualiza_estado(self):
+        token = generar_jwt(rol='ORGANIZADOR')
         respuesta = self.client.post(
             '/api/estado-simulador',
             data={'modo': 'timeout', 'latenciaMs': 4000},
@@ -90,7 +107,7 @@ class CoreEndpointsTest(SimpleTestCase):
         self.assertEqual(consulta.json(), {'modo': 'timeout', 'latenciaMs': 4000})
 
     def test_post_estado_simulador_modo_invalido_retorna_400(self):
-        token = generar_jwt(rol='ADMIN')
+        token = generar_jwt(rol='ORGANIZADOR')
         respuesta = self.client.post(
             '/api/estado-simulador',
             data={'modo': 'desconocido'},

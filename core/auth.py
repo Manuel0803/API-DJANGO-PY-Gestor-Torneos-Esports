@@ -48,6 +48,8 @@ def decodificar_jwt(token):
         token,
         settings.JWT_SECRET,
         algorithms=[getattr(settings, 'JWT_ALGORITHM', 'HS256')],
+        issuer=getattr(settings, 'JWT_ISSUER', 'api-torneos-esports'),
+        audience=getattr(settings, 'JWT_AUDIENCE', 'clientes-torneos-esports'),
     )
 
 

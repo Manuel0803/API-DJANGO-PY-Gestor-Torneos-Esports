@@ -26,13 +26,20 @@ DEBUG = env_bool('DEBUG', True)
 
 ALLOWED_HOSTS = env_list('ALLOWED_HOSTS', '*')
 
-CORS_ALLOWED_ORIGINS = env_list('CORS_ALLOWED_ORIGINS', 'http://localhost:3000')
+CORS_ALLOWED_ORIGINS = env_list(
+    'CORS_ALLOWED_ORIGINS',
+    'http://localhost:3000,http://localhost:5173',
+)
 
 INTERNAL_SERVICE_SECRET = os.getenv('INTERNAL_SERVICE_SECRET', 'dev-internal-service-secret')
 
-JWT_SECRET = os.getenv('JWT_SECRET', 'dev-jwt-secret-key-minimo-32-bytes-esports')
+JWT_SECRET = os.getenv('JWT_SECRET', 'super_secret_jwt_key_esports_2026')
 
 JWT_ALGORITHM = 'HS256'
+
+JWT_ISSUER = os.getenv('JWT_ISSUER', 'api-torneos-esports')
+
+JWT_AUDIENCE = os.getenv('JWT_AUDIENCE', 'clientes-torneos-esports')
 
 EXPRESS_SERVICE_URL = os.getenv('EXPRESS_SERVICE_URL', 'http://localhost:3000').rstrip('/')
 

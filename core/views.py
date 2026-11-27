@@ -16,7 +16,7 @@ def health(request):
     )
 
 
-@requiere_jwt(roles_permitidos=('ADMIN',))
+@requiere_jwt(roles_permitidos=('ORGANIZADOR',))
 def _actualizar_estado_simulador(request):
     payload = request.data if isinstance(request.data, dict) else {}
     modo = payload.get('modo')
